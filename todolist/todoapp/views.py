@@ -7,35 +7,40 @@ from django.views.generic import DeleteView
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from todoapp.models import Task
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 class UserLoginView(LoginView):
     template_name='todoapp/login.html'
     fields="__all__"
-    redirect_authenticated_user=True
-    def get_success_url(self):
-        return reverse_lazy('tasks')
+    
 
 
-class TaskList(ListView):
+class TaskList(LoginRequiredMixin,ListView):
     model=Task
-
-class TaskDetail(DetailView):
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        context['task_list']=context['task_list'].filter(user=self.request.user)
+        return context
+class TaskDetail(LoginRequiredMixin,DetailView):
     model=Task
     context_object_name='task'
 
 
-class CreateTask(CreateView):
+class CreateTask(LoginRequiredMixin,CreateView):
+    model=Task
+    fields=('title','description','complete ')
+    success_url=reverse_lazy("tasks")
+
+    def form_valid(self, form):
+        form.instance.user=self.request.user
+        return super(CreateTask,self).form_valid(form)
+
+class TaskUpdate(LoginRequiredMixin,UpdateView):
     model=Task
     fields='__all__'
     success_url=reverse_lazy("tasks")
 
-class TaskUpdate(UpdateView):
-    model=Task
-    fields='__all__'
-    success_url=reverse_lazy("tasks")
 
-
-class TaskDelet(DeleteView):
+class TaskDelet(LoginRequiredMixin,DeleteView):
     model=Task
     fields='__all__'
     success_url=reverse_lazy("tasks")
