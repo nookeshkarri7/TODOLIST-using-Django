@@ -1,5 +1,5 @@
 <h1>My TODO list</h1>
-<table>
+<table><a href='/create'>Create new Task</a>
     <tr>
         <th>Item</th>
     </tr>
@@ -8,6 +8,7 @@
         <td>{{eachtodo.title}}</td>
         <td><a href="/task/{{eachtodo.id}}">View</a></td>
         <td><a href="/update/{{eachtodo.id}}">Update</a></td>
+        <td><a href="/delete/{{eachtodo.id}}">Delete</a></td>
     </tr>
     {%endfor %}
 </table>
