@@ -4,8 +4,18 @@ from django.views.generic import DetailView
 from django.views.generic import CreateView
 from django.views.generic import UpdateView
 from django.views.generic import DeleteView
+from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from todoapp.models import Task
+
+class UserLoginView(LoginView):
+    template_name='todoapp/login.html'
+    fields="__all__"
+    redirect_authenticated_user=True
+    def get_success_url(self):
+        return reverse_lazy('tasks')
+
+
 class TaskList(ListView):
     model=Task
 
