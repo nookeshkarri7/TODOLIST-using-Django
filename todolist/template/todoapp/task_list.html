@@ -7,11 +7,11 @@
     <a href="{% url 'login' %}">Login</a>
     {%endif%}
     <br><br>
-<table><a href='/create'>Create new Task</a>
-    <form>
-        <input type='text' name='search-input' value={{search-input}}/>
+<table><a href='/create'>Create new Task</a><br>
+    <form method='get'>
+        <input type='text' name='searchinput' value="{{searchinput}}"/>
         <input type='submit' value='search'/>
-    </form>
+    </form><br>
     <tr>
         <th>Item</th>
     </tr>
