@@ -6,6 +6,7 @@
     {% for eachtodo in task_list %}
     <tr>
         <td>{{eachtodo.title}}</td>
+        <td><a href="/task/{{eachtodo.id}}">View</a></td>
     </tr>
     {%endfor %}
 </table>
