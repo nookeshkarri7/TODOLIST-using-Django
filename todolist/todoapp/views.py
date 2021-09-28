@@ -4,16 +4,35 @@ from django.views.generic import DetailView
 from django.views.generic import CreateView
 from django.views.generic import UpdateView
 from django.views.generic import DeleteView
+from django.views.generic import FormView
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from todoapp.models import Task
+
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 class UserLoginView(LoginView):
     template_name='todoapp/login.html'
     fields="__all__"
     
+class UserRegister(FormView):
+    template_name='todoapp/register.html'
+    form_class=UserCreationForm
+    success_url=reverse_lazy("tasks")
+    
+    
+    def form_valid(self, form):
+        user=form.save()
+        if user is not None:
+            login(self.request,user)
+        return super(UserRegister,self).form_valid(form)
 
-
+    def get(self,*args,**kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('tasks')
+        return super(UserRegister,self).get(*args,**kwargs)
 class TaskList(LoginRequiredMixin,ListView):
     model=Task
     def get_context_data(self,**kwargs):
